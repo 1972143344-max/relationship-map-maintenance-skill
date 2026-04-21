@@ -8,23 +8,25 @@
 
 # Findings
 
-| severity | finding | affected shard or area | suggested action |
+## Evidence Refreshed
+
+| artifact | scope | generated_at | notes |
 | --- | --- | --- | --- |
 | | | | |
 
-# Stale Shards
+## Stale Shards
 
 | shard | reason | suggested verification |
 | --- | --- | --- |
 | | | |
 
-# Suspected Missing Chains
+## Suspected Missing Chains
 
 | area | why suspected | recommended shard |
 | --- | --- | --- |
 | | | |
 
-# Deletion Candidates
+## Deletion Candidates
 
 | artifact | current_status | why candidate | user approval required |
 | --- | --- | --- | --- |
@@ -32,12 +34,22 @@
 
 For each candidate, state which entry criteria were satisfied and which remained uncertain.
 
-# Generated Evidence Refreshed
+## Additional Findings
 
-| artifact | scope | generated_at | notes |
+| severity | finding | affected shard or area |
+| --- | --- | --- |
+| | | |
+
+# Suggested Actions
+
+| priority | action | target | reason |
 | --- | --- | --- | --- |
 | | | | |
 
-# User-Visible Decisions Needed
+Keep recommendations separate from confirmed observations.
+
+# Needs User Confirmation
 
 - 
+
+Use this section for structural, semantic, or destructive actions that must not be applied silently.

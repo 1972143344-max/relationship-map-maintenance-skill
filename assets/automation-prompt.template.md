@@ -9,4 +9,8 @@ Rules:
 - flag deletion candidates instead of deleting them
 - append a factual audit entry if generated evidence or lifecycle state changed materially
 - keep the report compact and action-oriented
+- structure the report as `Findings`, `Suggested Actions`, and `Needs User Confirmation`
+- keep recommendations separate from confirmed observations
 - if evidence is insufficient, say so explicitly
+- after producing the report, do a brief sanity check on the report and factual outputs
+- if a later step applies real relationship-map modifications, use the normal review thresholds instead of treating report generation as the final review

@@ -30,6 +30,14 @@ The report should summarize:
 - what deletion candidates were detected
 - which changes require explicit user review
 
+Use this section order by default:
+
+1. `Findings`
+2. `Suggested Actions`
+3. `Needs User Confirmation`
+
+Keep recommendations clearly separate from confirmed observations.
+
 ## Safe Automation Contract
 
 Automation may:
@@ -45,6 +53,9 @@ Automation must not silently:
 - promote, archive, merge, split, or supersede curated shards
 - physically delete relationship-map artifacts
 - claim confidence above the evidence level
+
+If the automation only produces a report or factual refresh, do a brief sanity check rather than a full review pass.
+If a later interactive step applies actual relationship-map changes, run review according to the normal skill thresholds.
 
 ## Suggested Recurrence
 

@@ -81,3 +81,33 @@ At minimum, report:
 - shards flagged as stale, partial, conflicting, or missing
 - artifacts proposed for deletion review
 - follow-up actions that still require interactive confirmation
+
+Use this structure by default:
+
+- `Findings`: factual observations only
+- `Suggested Actions`: recommended next steps, clearly separated from facts
+- `Needs User Confirmation`: structural, semantic, or destructive actions that must not be applied silently
+
+Do not blur findings and recommendations into one section.
+
+## Post-Report And Post-Change Check
+
+Distinguish report generation from actual modification.
+
+- if automation only refreshes generated evidence, writes a report, or appends a factual audit entry, perform a brief sanity check on the report and changed factual outputs
+- if a later interactive step performs real relationship-map modifications, use the normal review thresholds instead of treating the report-only pass as sufficient
+
+The sanity check should confirm at least:
+
+- the report did not invert or overstate the evidence
+- flagged items are routed to the correct shard or artifact
+- suggested actions are separated from confirmed facts
+- explicit user-confirmation items are still clearly marked
+
+Escalate to a full review pass after modification when any of these is true:
+
+- `>= 3` files changed
+- the change crosses `>= 2` surfaces among code, config, script, tests, artifacts, or relationship-map docs
+- an entrypoint, shared contract, or core config format changed
+- the change-impact checklist contains `>= 5` follow-up checks
+- an existing `critical-chain` was touched
