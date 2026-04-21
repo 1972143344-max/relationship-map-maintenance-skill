@@ -1,5 +1,7 @@
 # Relationship Map Maintenance
 
+Chinese version: [README.zh-CN.md](./README.zh-CN.md).
+
 `relationship-map-maintenance` is a project-scoped skill for maintaining a compact relationship and change-impact layer around complex code changes.
 
 It is meant for repositories where fixes and features regularly cross file, module, config, script, and test boundaries, and where "updated one place, missed another" is a recurring failure mode.
@@ -43,6 +45,7 @@ relationship-map-maintenance/
   SKILL.md
   README.md
   README.zh-CN.md
+  LICENSE
   agents/
     openai.yaml
   assets/
@@ -104,14 +107,3 @@ The skill keeps maintenance conservative.
 - reports may be written when there are material findings or when a scheduled run requires one
 - structural shard decisions should not be applied silently
 - physical deletion requires explicit user approval
-
-## Publishing Notes
-
-If you publish this skill as a standalone repository, include:
-
-- the full skill directory
-- both README files
-- the `assets/` templates
-- the `references/` documents
-
-If you publish it as part of a larger repository, keep the path structure intact so relative references remain valid.

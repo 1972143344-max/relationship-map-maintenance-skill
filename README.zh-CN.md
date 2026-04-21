@@ -1,12 +1,14 @@
 # Relationship Map Maintenance
 
+English version: [README.md](./README.md)
+
 `relationship-map-maintenance` 是一个面向项目的 skill，用来给复杂代码改动维护一层轻量的关系图与影响面文档。
 
-它适合这类仓库：一个修复或功能往往会跨越代码、配置、脚本、运行时链路和测试；而且项目里经常出现“只改了一处，遗漏了另一处”的问题。
+它适合这类仓库：一个修复或功能往往会跨越代码、配置、脚本、运行时链路和测试，而且项目里经常出现“只改了一处，遗漏了另一处”的问题。
 
 这个 skill 不替代代码阅读、测试和 review。它的作用是补一层成本可控的书面结果，让 agent 在改动前更容易定位影响范围，在改动后更容易同步更新相关关系。
 
-## 它解决什么问题
+## 作用
 
 - 为 `docs/<project-scope>/relationship-map/` 提供一套项目级文档结构
 - 为项目根 `AGENTS.md` 提供一段最小常驻规则，保证压缩或重入后仍有基础路由能力
@@ -43,6 +45,7 @@ relationship-map-maintenance/
   SKILL.md
   README.md
   README.zh-CN.md
+  LICENSE
   agents/
     openai.yaml
   assets/
@@ -61,14 +64,14 @@ relationship-map-maintenance/
     conflict-lifecycle-and-deletion.md
 ```
 
-## 安装方式
+## 安装
 
 把整个 skill 目录复制到 Codex 的 skills 目录下即可。
 
 如果按项目安装，就放到仓库本地的 skills 目录。
 如果按用户级安装，就放到用户自己的 Codex skills 目录。
 
-## 初始化步骤
+## 初始化
 
 初始化分两层：
 
@@ -104,14 +107,3 @@ relationship-map-maintenance/
 - 只有在出现实质发现，或者定时任务明确要求时，才建议写维护报告
 - 不应静默执行结构性 shard 变更
 - 物理删除必须得到用户明确批准
-
-## 发布说明
-
-如果你把这个 skill 作为独立仓库发布，建议一并包含：
-
-- 完整 skill 目录
-- 中英双语 README
-- `assets/` 模板
-- `references/` 细则文档
-
-如果你把它放在更大的仓库中发布，也应保持当前路径结构，避免相对引用失效。
