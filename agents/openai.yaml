@@ -1,0 +1,4 @@
+interface:
+  display_name: "Relationship Map Maintenance"
+  short_description: "Create and maintain project-scoped relationship and change-impact maps so multi-file fixes do not miss related code, config, scripts, or tests."
+  default_prompt: "Use $relationship-map-maintenance with the shortest safe path: choose `skip`, `light`, or `full`; if `skip`, do not open relationship-map docs; if `light` or `full`, route through `00_index.md` first; reuse existing shards before re-deriving relationships; treat maintenance or automation detail as a rare path."
