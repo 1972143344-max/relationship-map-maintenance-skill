@@ -1,8 +1,17 @@
+# Maintenance Threshold
+
+- Thresholds:
+  - split or refactor this policy doc when it grows past `220` lines or starts mixing routing rules, taxonomy, lifecycle, and automation guidance in one hard-to-scan block
+  - if contributors can no longer quickly answer "how should I read and trust this layer" without scanning the whole file, treat it as oversized even before the line threshold
+- Trigger:
+  - if this policy doc is over threshold or too mixed to route quickly, explicitly tell the user that policy/routing guidance should be split by semantic responsibility rather than keep growing as one file
+
 # Summary
 
 - Purpose: define how relationship-map artifacts are written, read, and maintained
 - Authority: policy for the relationship-map layer only; does not override current code or authoritative governance docs, and detected drift should be fixed in the same workstream
 - Read this when: initializing or maintaining the relationship-map layer for this project scope
+- Skip this when: the current task only needs one routed shard and no policy, taxonomy, or lifecycle decision is in play
 
 # Usage And Policy
 
