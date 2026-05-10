@@ -1,7 +1,7 @@
 # Summary
 
 - Purpose: define how relationship-map artifacts are written, read, and maintained
-- Authority: policy for the relationship-map layer only; does not override governance docs
+- Authority: policy for the relationship-map layer only; does not override current code or authoritative governance docs, and detected drift should be fixed in the same workstream
 - Read this when: initializing or maintaining the relationship-map layer for this project scope
 
 # Usage And Policy

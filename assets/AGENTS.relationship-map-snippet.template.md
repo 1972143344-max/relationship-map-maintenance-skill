@@ -1,5 +1,7 @@
 ## Relationship-Map Maintenance
 
+Treat this block as a short routing surface, not as a weak summary copy of the whole relationship-map workflow.
+
 When a project scope has `docs/<project-scope>/relationship-map/`, use it as a reference layer for non-trivial change-impact analysis, post-change updates, and periodic maintenance.
 
 Default path order:
@@ -8,26 +10,23 @@ Default path order:
 - `update`: post-change freshness or shard updates only when relationship meaning or shard state changed
 - `maintain`: periodic or structural upkeep only when actually needed
 
-Do not default to full relationship-map maintenance.
 Use the lightest safe mode:
 
 - `skip`: for clearly mechanical or relationship-neutral changes
 - `light`: read `00_index.md` and the minimum relevant shard summary only
 - `full`: use only when the change is high-risk, multi-surface, structurally important, or when `light` is insufficient
 
-Start with `full` directly when any of the following is true:
+Read `docs/<project-scope>/relationship-map/00_index.md` when:
 
-- `>= 3` files changed
-- the change crosses `>= 2` surfaces among code, config, script, tests, artifacts, or relationship-map docs
-- an entrypoint, shared contract, or core config format changed
-- an existing `critical-chain` was touched
-- the expected change-impact checklist would contain `>= 5` follow-up checks
-- conflict handling, deletion review, structural shard change, or relationship-map automation is involved
+- the task is non-trivial and relationship impact is plausible
+- the round is in `light` or `full`
+- you need to choose the minimum relevant curated shard before editing or review
 
-If none of the above is true, do not expand into the full relationship-map workflow by default.
-Use low-cost checks first.
-Use `skip` when the change does not alter relationship meaning, add a reusable relationship edge, or change shard freshness or status.
-Use `light` only when one of those signals is present but the impact still appears local.
+Do not read relationship-map docs by default when:
+
+- the round is clearly `skip`
+- the change is local, mechanical, and relationship-neutral
+- no shared contract, entrypoint, core config format, or existing `critical-chain` is touched
 
 Prefer reuse of existing written relationship-map results over repeated analysis:
 

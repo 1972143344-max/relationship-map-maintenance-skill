@@ -1,131 +1,135 @@
 ---
 name: relationship-map-maintenance
-description: Create and maintain project-scoped relationship and impact maps for complex code changes. Use when fixing bugs across multi-file call chains, tracing dependencies beyond imports, updating explicit change-impact shards, auditing relationship-map changes, or periodically checking whether curated relationship maps are stale, incomplete, conflicting, or ready for deletion review.
+description: Create and maintain project-scoped relationship and impact maps for complex code changes. Use when fixing bugs across multi-file call chains, tracing dependencies beyond imports, updating explicit change-impact shards, auditing relationship-map changes, or periodically checking whether curated relationship maps are stale, incomplete, conflicting, or ready for deletion review. If this skill is adopted as the governing workflow for the current action, read the full main SKILL.md before major relationship-map routing, update, or maintenance actions.
 ---
 
 # Relationship Map Maintenance
 
-Create and maintain a project-scoped relationship and impact layer so multi-file fixes and features do not stop at the first edited file and leave related code, config, scripts, runtime links, or tests stale.
+Use this skill to operate a project-scoped relationship-map layer without letting relationship maps replace code, governance, tests, or review.
 
-This skill is for explicit change-impact tracking, not for generic prose documentation.
+Default to `docs/<project-scope>/relationship-map/`.
+Use `docs/relationship-map/` only when the user explicitly wants one repository-wide relationship-map layer shared across multiple projects or experiments.
 
-Default to project-scoped relationship maps under `docs/<project-scope>/relationship-map/`.
-Use `docs/relationship-map/` only when the user explicitly wants one repository-wide map shared across multiple projects or experiments.
+## G0. Front Door
 
-## Quick Path
+### Use This Skill When
 
-Use the shortest path that is still safe.
+- the user asks to build or maintain dependency, relationship, impact, or call-chain maps
+- a bug fix or feature likely crosses multiple files, modules, configs, scripts, runtime links, or tests
+- the codebase has repeated "fixed one place, forgot another" failures
+- the user wants pre-change impact analysis or post-change relationship-map updates for a non-trivial edit
+- the user wants periodic maintenance of relationship maps through automation
 
-1. Decide whether the task is `skip`, `light`, or `full`.
-2. If `skip`, do not open relationship-map docs.
-3. If `light` or `full`, route through `00_index.md` first.
-4. Read only the minimum shard summary or shard body needed for the current task.
-5. Reuse existing written results before re-deriving relationships from scratch.
-6. After a meaningful change, update only the touched shard, index, and freshness state that actually changed.
-7. Use maintenance, audit, lifecycle, deletion, and automation detail only on the rare path.
+### Do Not Use This Skill When
 
-Primary path order:
+- the change is clearly mechanical, local, and relationship-neutral
+- a single-file edit has no meaningful upstream or downstream impact
+- the relevant change surface is already obvious and no reusable relationship artifact would result
+- the user only wants ordinary code changes and no explicit relationship-map workflow is needed
+
+### First Step After Trigger
+
+Once this skill is adopted as the governing workflow for the current action:
+
+1. read this main `SKILL.md`
+2. classify the round as `use`, `update`, or `maintain`
+3. choose the lightest safe mode: `skip`, `light`, or `full`
+4. route only into the support protocol or sidecar actually needed
+
+Do not jump straight into initialization, audit, automation, or deletion detail unless the current action actually needs that path.
+
+### Relationship-Map Truth Boundary
+
+Relationship-map artifacts are a maintained reference layer, not the source of truth.
+
+- current code, runtime files, configs, scripts, tests, and artifacts remain implementation reality
+- authoritative governance docs remain higher authority for intended behavior, constraints, and decisions
+- if current code or authoritative governance docs conflict with a relationship map, code and governance win
+- when such drift is discovered, refresh the affected map in the same workstream instead of leaving the conflict implicit
+
+### Structural Change Boundary
+
+Do not silently change what future agents will read first.
+
+This includes:
+
+- archive or supersede actions
+- structural shard changes such as merge or split
+- deletion review or approved deletion
+- AGENTS-block adoption that changes persistent routing behavior
+
+## G1. Runtime Routing
+
+This main file is a runtime router, not the whole manual.
+
+Use it to determine which support protocol or low-frequency sidecar must be read next.
+
+### Read `10_relationship_map_runtime_protocol.md`
+
+Read `10_relationship_map_runtime_protocol.md` when the current round involves:
+
+- non-trivial repo work that depends on relationship-map reading quality
+- choosing `skip`, `light`, or `full`
+- deciding between `00_index.md`, shard summaries, shard bodies, generated manifest, or generated artifacts
+- relationship-map routing, probing, or read-budget judgment
+
+Skip `10_relationship_map_runtime_protocol.md` when the round is:
+
+- pure chat
+- light brainstorming with no repo-document lookup
+- a clearly `skip`-eligible local change where no relationship-map read is needed
+
+### Read `11_relationship_map_execution_contract.md`
+
+Read `11_relationship_map_execution_contract.md` when the current round involves:
+
+- relationship-map shard or index updates
+- freshness-state changes
+- audit-log updates
+- maintenance reports
+- structural changes such as archive, supersede, split, merge, or deletion review
+- review-threshold or closure judgment for relationship-map modifications
+
+Skip `11_relationship_map_execution_contract.md` when the round is:
+
+- pure chat
+- read-only routing with no relationship-map modification or sync decision
+- a clearly `skip`-eligible code change that does not touch relationship-map artifacts
+
+### Read Low-Frequency Sidecars
+
+Route to these only when the action actually needs them:
+
+- `initialization-and-adoption.md` for first-time setup or project adoption
+- `relationship-map-surface-catalog.md` for the full document set, stable entrypoints, or template routing
+- `references/conflict-lifecycle-and-deletion.md` for shard conflict, lifecycle, archive, supersede, or deletion handling
+- `references/audit-and-automation.md` for audit minimum set, maintenance runs, or automation guardrails
+- `references/automation-workflow.md` for recurring maintenance design
+
+### Main-File-Only Cases
+
+This main file alone is usually enough only when the current action is:
+
+- deciding whether to trigger the skill at all
+- classifying the round as `use`, `update`, or `maintain`
+- choosing `skip`, `light`, or `full`
+- identifying which deeper support file must be read next
+
+## G2. Runtime Operating Model
+
+### Primary Paths
 
 - `use`: pre-change routing and impact analysis
-- `update`: post-change freshness or shard updates
-- `maintain`: periodic or structural upkeep
+- `update`: post-change freshness or shard updates only when relationship meaning or shard state changed
+- `maintain`: periodic or structural upkeep only when actually needed
 
 Do not let maintenance dominate ordinary use of this skill.
 
-## Use This Skill When
+### Read Modes
 
-- the user asks to build or maintain dependency, relationship, impact, or call-chain maps
-- a bug fix likely crosses multiple files, modules, scripts, configs, or tests
-- the codebase has repeated "fixed one place, forgot another" failures
-- the user wants change-impact review before or after a non-trivial edit
-- the user wants periodic maintenance of relationship maps through automation
-
-## When Not To Trigger
-
-This skill usually does not need to be expanded for:
-
-- single-file mechanical edits with no meaningful upstream or downstream impact
-- formatting-only or comment-only changes
-- trivial text or naming fixes that do not affect behavior
-- narrow local edits where the relevant change surface is already obvious and no reusable relationship artifact would result
-
-## Reference Boundary
-
-This skill is a reference layer, not a substitute for normal engineering analysis.
-
-Do not rely only on the relationship map when implementing or reviewing changes.
-Also use the actual code, targeted search, diffs, tests, runtime validation, config checks, and independent review.
-
-The relationship-map layer should reduce omission risk, not narrow analysis so much that new blind spots appear.
-
-## Reuse-First Rule
-
-Prefer reuse of existing written relationship results over repeated analysis.
-
-- if `00_index.md` routes to the right shard, do not scan the whole relationship-map tree
-- if a shard summary answers the routing question, do not open multiple shard bodies
-- if a curated shard already captures the needed relationship, do not re-derive it from generated artifacts
-- if `generated/00_manifest.md` points to the needed evidence, do not scan the whole `generated/` folder
-- if an existing maintenance report already identified the stale or conflicting item, do not repeat the same detection work unless fresh verification is required
-
-Written artifacts should reduce repeated context spend, not create more of it.
-
-## Read Budget
-
-Keep the default read budget small.
-
-### `skip`
-
-Use `skip` when the change is clearly mechanical or relationship-neutral.
-
-Default reads:
-
-- none beyond the code you are already changing
-
-Do not open relationship-map docs in this mode unless new evidence suggests the change is not actually relationship-neutral.
-
-### `light`
-
-Use `light` for the middle ground: some relationship impact may exist, but the task does not clearly justify the full workflow.
-
-Default reads:
-
-1. `00_index.md`
-2. the `Summary` section of the minimum relevant shard
-
-Optional expansion in `light`:
-
-- the body of one shard only if its summary is insufficient
-
-Do not read by default in `light`:
-
-- `01_usage_and_policy.md`
-- `02_audit_log.md`
-- `generated/00_manifest.md`
-- generated artifacts
-- maintenance reports
-
-### `full`
-
-Use `full` only when the change is high-risk, multi-surface, structurally important, or when `light` cannot safely resolve the impact.
-
-Default reads:
-
-1. `00_index.md`
-2. relevant shard summaries
-3. the body of the relevant curated shard or shards
-4. `generated/00_manifest.md` only if curated shards are insufficient
-
-Conditional reads in `full`:
-
-- specific generated artifacts only when needed
-- `01_usage_and_policy.md` only for initialization, taxonomy, or policy questions
-- `02_audit_log.md` only when history, lifecycle, or approval traceability matters
-- maintenance reports only when maintenance findings are directly relevant
-
-## Mode Selection
-
-Use the lightest mode that is still safe.
+- `skip`: no relationship-map reads for clearly mechanical or relationship-neutral changes
+- `light`: read `00_index.md` and the minimum relevant shard summary only
+- `full`: expand only when the change is high-risk, multi-surface, structurally important, or unresolved by `light`
 
 ### Hard Skip Gate
 
@@ -147,9 +151,9 @@ Use `full` directly when any of the following is true:
 - the expected change-impact checklist would contain `>= 5` follow-up checks
 - conflict handling, deletion review, structural shard change, or relationship-map automation is involved
 
-### Lightweight Assessment For `light`
+### Lightweight Assessment
 
-If neither hard gate applies, use only the following low-cost checks:
+If neither hard gate applies, use only these low-cost checks:
 
 - does this change alter an existing relationship description
 - does it add a reusable relationship edge
@@ -160,177 +164,69 @@ Use `skip` if all answers are no.
 Use `light` if one answer is yes and the impact remains local.
 Upgrade to `full` if multiple answers are yes or if the answer remains unclear after reading `00_index.md` and one shard summary.
 
-## Project Structure
+### Reuse-First Rule
 
-The standard project-scoped relationship-map set is:
+Prefer reuse of existing written relationship-map results over repeated analysis.
 
-- `docs/<project-scope>/relationship-map/00_index.md`
-- `docs/<project-scope>/relationship-map/01_usage_and_policy.md`
-- `docs/<project-scope>/relationship-map/02_audit_log.md`
-- `docs/<project-scope>/relationship-map/critical-chains/`
-- `docs/<project-scope>/relationship-map/impact-shards/`
-- `docs/<project-scope>/relationship-map/generated/`
-- `docs/<project-scope>/relationship-map/generated/00_manifest.md`
-- optional: `docs/<project-scope>/relationship-map/maintenance/`
-- optional: `docs/<project-scope>/relationship-map/archive/`
+- if `00_index.md` routes to the right shard, do not scan the whole tree
+- if a shard summary answers the routing question, do not open multiple shard bodies
+- if a curated shard already captures the needed relationship, do not re-derive it from generated artifacts
+- if `generated/00_manifest.md` points to the needed evidence, do not scan the whole `generated/` folder
+- if an existing maintenance report already identified the stale or conflicting item, do not repeat the same detection work unless fresh verification is required
 
-Use the templates in `assets/` when creating them.
+Written artifacts should reduce repeated context spend, not create more of it.
 
-## Persistent AGENTS Adoption
+### Persistent AGENTS Adoption
 
 This skill has two install surfaces:
 
 1. the project-scoped `docs/<project-scope>/relationship-map/` document layer
 2. the project-local `AGENTS.md` persistent rule layer
 
-For GitHub-portable setup, treat both as part of initialization.
+Treat the `AGENTS.md` block as an index-bearing control surface:
 
-Use `assets/AGENTS.relationship-map-snippet.template.md` for the persistent rule layer.
+- keep it short and durable
+- use it to route into repo-local relationship-map docs
+- do not turn it into a weak summary copy of the whole skill
 
-Adoption rule:
+If a project-local `AGENTS.md` already exists, append the relationship-map block incrementally.
+Do not rewrite or reorganize unrelated `AGENTS.md` content.
 
-- if a project-local `AGENTS.md` already exists, append the relationship-map block incrementally
-- do not rewrite, replace, or reorganize unrelated `AGENTS.md` content
-- if no project-local `AGENTS.md` exists, create one and add the minimum relationship-map block
-- keep the `AGENTS.md` block short and durable; detailed workflow stays in `SKILL.md` and the relationship-map docs
-- if the repository already has stronger or more specific local rules for relationship-map use, merge carefully instead of creating duplicate contradictory blocks
+## G3. Structural Control And Closure
 
-## Document Roles
+### Ask-First
 
-- `00_index.md`: routing index, shard registry, freshness overview, and read order
-- `01_usage_and_policy.md`: authority boundary, edge taxonomy, freshness policy, and maintenance rules
-- `02_audit_log.md`: append-only record of meaningful relationship-map changes
-- `critical-chains/`: small human-maintained high-risk end-to-end chains repeatedly hit by bug fixes or feature work
-- `impact-shards/`: scoped relationship summaries by capability, module area, or file cluster
-- `generated/`: broad machine-generated evidence such as import maps, call maps, or cross-file references
-- `generated/00_manifest.md`: routing manifest for generated evidence
-- `maintenance/`: maintenance reports and stale or missing map findings
-- `archive/`: superseded or archived shards
+Ask before:
 
-## Summary-First Rule
+- initializing the relationship-map layer
+- adopting an existing project into this layer
+- creating a new project-local `AGENTS.md`
+- deleting relationship-map artifacts
 
-Every durable relationship-map artifact should provide a short routing summary at the top.
+### Notify-First
 
-At minimum:
+Tell the user explicitly before or while performing:
 
-- `00_index.md` should summarize shard purpose and when to read it
-- each curated shard should start with a compact `Summary` block
-- maintenance reports should expose key findings near the top
-- generated evidence should be discoverable through a compact manifest instead of direct folder scans
+- archive or supersede actions
+- merge or split of curated shards
+- deletion-candidate transitions that may lead to physical deletion
+- changes that materially reorganize relationship-map routing or persistent AGENTS behavior
 
-The goal is route first, expand second.
+### Same-Round Sync Rule
 
-## What To Track
+Treat shard update plus index update as one documentation action when relationship meaning, freshness, or status changed materially.
 
-Do not limit the map to imports or direct calls.
+Do not leave:
 
-Track relationship types such as:
+- shard state changed but `00_index.md` stale
+- lifecycle state changed but `02_audit_log.md` missing when traceability is required
+- structural route changes unreported
 
-- `imports`
-- `calls`
-- `reads_config`
-- `writes_config`
-- `invokes_script`
-- `produces_artifact`
-- `consumes_artifact`
-- `validated_by_test`
-- `depends_on_contract`
-- `entrypoint_for`
+### Review Boundary
 
-For complex experiment or runtime projects, explicitly cover non-code chains such as:
+Relationship maps help drive review. They do not replace review.
 
-- `python -> shell -> json config -> runtime file -> test/artifact`
-- runtime entrypoint -> orchestrator -> adapter -> experiment config -> judge/output path
-
-## Initialization
-
-If relationship maps do not exist yet:
-
-1. Confirm the active project scope.
-2. Ask whether to initialize the relationship-map layer for that scope.
-3. Create:
-   - `docs/<project-scope>/relationship-map/00_index.md`
-   - `docs/<project-scope>/relationship-map/01_usage_and_policy.md`
-   - `docs/<project-scope>/relationship-map/02_audit_log.md`
-   - `docs/<project-scope>/relationship-map/critical-chains/`
-   - `docs/<project-scope>/relationship-map/impact-shards/`
-   - `docs/<project-scope>/relationship-map/generated/`
-   - `docs/<project-scope>/relationship-map/generated/00_manifest.md`
-   - optional `maintenance/` and `archive/`
-4. Add the persistent relationship-map rule block to the project-local `AGENTS.md`:
-   - append `assets/AGENTS.relationship-map-snippet.template.md` if `AGENTS.md` already exists
-   - create `AGENTS.md` first only when the project does not already have one
-   - do not replace unrelated existing `AGENTS.md` content
-5. Start with a minimal useful scope, not a whole-repo giant map.
-6. Prefer one or two high-risk chains first.
-
-## Sharding Strategy
-
-Do not shard by only one axis.
-
-Use a practical mix:
-
-- by capability or workflow when failures are cross-directory
-- by module or directory when ownership is stable
-- by chain when a bug repeatedly spans runtime, config, script, and test surfaces
-
-Good shards are:
-
-- small enough to read quickly
-- large enough to cover one meaningful change surface
-- stable enough to stay useful across multiple edits
-
-## Use Workflow
-
-Before a non-trivial bug fix or feature change:
-
-1. choose `skip`, `light`, or `full`
-2. if the mode is `skip`, do not open relationship-map docs
-3. if the mode is `light` or `full`, route through `00_index.md`
-4. read only the minimum relationship-map docs allowed for that mode
-5. if needed, produce an explicit change-impact checklist:
-   - likely files to edit
-   - upstream or downstream files to inspect
-   - configs or scripts that may need updates
-   - tests or validation artifacts that must be rechecked
-6. only then start editing
-
-Do not rely on memory alone for multi-file change impact when a written map exists.
-
-## Update Workflow
-
-After a meaningful change:
-
-1. re-check whether the edited files touched any curated chain or shard
-2. if relationship meaning did not change, prefer freshness-only or no map update
-3. if stable relationship meaning changed, update only the affected shard or shards
-4. keep `00_index.md` synchronized when shard status, freshness, or routing changed
-5. append to `02_audit_log.md` only when the change is materially traceable
-6. tell the user explicitly if the update is structural
-
-Treat shard update plus index update as one documentation action.
-
-## Maintain Workflow
-
-Use maintenance for periodic upkeep, not as the default path for ordinary tasks.
-
-Maintenance should usually:
-
-1. refresh generated evidence
-2. refresh `generated/00_manifest.md`
-3. compare generated evidence against curated shards only where needed
-4. flag stale, missing, conflicting, or deletion-review candidates
-5. write a maintenance report only when there are material findings or a scheduled run requires one
-6. append a factual audit entry only when the run materially refreshed evidence or changed artifact state
-
-Keep maintenance conservative.
-Structural or semantic decisions should be surfaced to the user rather than silently applied.
-
-## Review Loop
-
-Use relationship maps to drive review, not to replace review.
-
-Require a review pass when any of the following is true:
+Require a review pass for relationship-map-driven work when any of these is true:
 
 - `>= 3` files changed
 - the change crosses `>= 2` surfaces among code, config, script, tests, artifacts, or relationship-map docs
@@ -338,56 +234,53 @@ Require a review pass when any of the following is true:
 - the change-impact checklist contains `>= 5` follow-up checks
 - an existing `critical-chain` was touched
 
-After a non-trivial change or when one of the above thresholds is met, review from at least these angles:
+## G4. Sidecar Routing
 
-- changed file correctness
-- upstream or downstream impact coverage
-- config and script coverage
-- validation coverage
-- stale relationship-map entries created by the change
+### `10_relationship_map_runtime_protocol.md`
 
-Relationship-map-driven review is only one review input.
-Also inspect the actual diff, search the surrounding code, and verify behavior with the appropriate tests or runtime checks.
+- Position: `high-frequency support protocol`
+- Description: route-first reading contract for relationship-map routing, read budgets, curated-vs-generated expansion, and stop rules
+- Read when:
+  - relationship-map reading quality matters for the current task
+  - mode selection or document expansion needs more than the main router
+- Skip when:
+  - the round is pure chat
+  - the round is clearly `skip`
 
-## Rare Path References
+### `11_relationship_map_execution_contract.md`
 
-Open these only when the task actually needs them:
+- Position: `high-frequency support contract`
+- Description: update, audit, maintenance, structural-notify, and review-threshold rules for relationship-map modifications
+- Read when:
+  - the round is updating relationship-map docs or making structural decisions
+  - audit, maintenance, or deletion-review handling matters
+- Skip when:
+  - the round is read-only routing with no relationship-map sync decision
+
+### `initialization-and-adoption.md`
+
+- Position: `low-frequency workflow sidecar`
+- Description: initialization steps, adoption sequence, AGENTS-block integration, and minimum first-use setup
+- Read when:
+  - relationship-map docs do not exist yet
+  - an existing project must be adopted into this layer
+- Skip when:
+  - the layer is already established and the current action is not changing its foundation
+
+### `relationship-map-surface-catalog.md`
+
+- Position: `low-frequency routing sidecar`
+- Description: full relationship-map document set, stable entrypoints, document roles, and template routing
+- Read when:
+  - you need the full relationship-map surface set or template map
+  - you are changing structure or setting up a new project scope
+- Skip when:
+  - the current action already has a known protocol or document target
+
+### Rare-Path References
+
+Read only when the action explicitly needs them:
 
 - `references/conflict-lifecycle-and-deletion.md`
-  - shard conflict handling
-  - status selection
-  - lifecycle transitions
-  - deletion-candidate rules
 - `references/audit-and-automation.md`
-  - audit minimum set
-  - periodic maintenance detail
-  - automation guardrails
-  - maintenance reporting expectations
 - `references/automation-workflow.md`
-  - recurring maintenance design
-
-## Templates
-
-Use:
-
-- `assets/AGENTS.relationship-map-snippet.template.md`
-- `assets/00_index.template.md`
-- `assets/01_usage_and_policy.template.md`
-- `assets/02_audit_log.template.md`
-- `assets/critical-chain.template.md`
-- `assets/impact-shard.template.md`
-- `assets/generated-manifest.template.md`
-- `assets/maintenance-report.template.md`
-- `assets/automation-prompt.template.md`
-
-## Practical Default
-
-When the user wants a first useful version:
-
-- add the minimal relationship-map block to project-local `AGENTS.md` incrementally, or create `AGENTS.md` only if missing
-- initialize one project-scoped relationship-map layer
-- create `00_index.md` and `01_usage_and_policy.md`
-- create `02_audit_log.md`
-- create one or two `critical-chains/` shards for the highest-risk workflows
-- create only a few `impact-shards/` for the active change surface
-- add automation later, after the manual workflow is demonstrably useful

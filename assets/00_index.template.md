@@ -1,8 +1,17 @@
+# Maintenance Threshold
+
+- Thresholds:
+  - add a second-level routing split when this index grows past `220` lines or `18` active rows across critical chains, impact shards, maintenance queue, and deletion candidates
+  - if the index can no longer route most tasks to one next shard or one next document hop, treat it as noisy even before the line threshold
+- Trigger:
+  - if this index is over threshold or has become noisy to route, explicitly tell the user that relationship-map routing maintenance is needed and propose a second-level routing split rather than letting repeated scans grow silently
+
 # Summary
 
 - Purpose: route relationship-map reads to the minimum relevant curated shard before falling back to generated evidence
-- Authority: routing-only; source files and governance docs remain higher authority
+- Authority: routing-only support; current code and authoritative governance docs remain higher authority, and detected drift should be fixed in the same workstream
 - Read this first when: a task needs change-impact analysis, chain tracing, or relationship-map maintenance
+- Skip this when: the round is clearly `skip` and relationship impact is already known to be neutral
 
 # Relationship Map Index
 

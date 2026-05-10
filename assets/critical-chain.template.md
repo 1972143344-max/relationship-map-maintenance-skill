@@ -2,6 +2,7 @@
 
 - Type: critical chain
 - Purpose: compact human-maintained map for a repeatedly important high-risk end-to-end workflow
+- Authority: routing and impact aid only; if current code or authoritative governance docs conflict with this chain, code and governance win and the chain should be refreshed in the same workstream
 - Read this when: a change touches this workflow or a bug may propagate across this chain
 
 # Metadata
