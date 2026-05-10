@@ -1,16 +1,14 @@
-# Relationship Map Maintenance
+# Relationship Map Maintenance Skill
 
-Chinese version: [README.zh-CN.md](./README.zh-CN.md).
+[中文说明](./README.zh-CN.md)
 
-`relationship-map-maintenance` is a project-scoped skill for maintaining a compact relationship and change-impact layer around complex code changes.
-
-It is designed for repositories where fixes and features regularly cross file, module, config, script, runtime, and test boundaries, and where "updated one place, missed another" is a recurring failure mode.
+This repository packages a reusable Codex skill for building and maintaining a project-scoped relationship-map layer around complex code changes. The current version is structured as a runtime router, two high-frequency support protocols, low-frequency sidecars, and template assets that keep AGENTS routing, shard updates, and maintenance triggers explicit.
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    A["Task enters repo"] --> B["Project AGENTS.md<br/>short routing block"]
+    A["Task enters repo"] --> B["project AGENTS.md<br/>short routing block + durable rules"]
     B --> C["SKILL.md<br/>runtime router"]
     C --> D["10_relationship_map_runtime_protocol.md<br/>high-frequency reading contract"]
     C --> E["11_relationship_map_execution_contract.md<br/>high-frequency update/maintenance contract"]
@@ -20,97 +18,21 @@ flowchart TD
     E --> H
     F --> H
     G --> H
+    I["assets/<br/>AGENTS snippet + map templates + threshold blocks"] --> H
 ```
-
-## What It Adds
-
-- a project-scoped `docs/<project-scope>/relationship-map/` document set
-- a minimal `AGENTS.md` routing block for persistent, low-cost read guidance
-- curated `critical-chains/` and `impact-shards/` for high-value change surfaces
-- a generated-evidence manifest so agents do not need to scan large folders by default
-- conservative maintenance rules for conflict handling, lifecycle changes, audit logging, and automation
-
-## Core Design Ideas
-
-### 1. Keep the main skill focused on runtime routing
-
-The main `SKILL.md` now owns only the high-frequency decisions:
-
-- whether to trigger the skill
-- whether the round is `use`, `update`, or `maintain`
-- whether the read mode is `skip`, `light`, or `full`
-- which support protocol or sidecar must be read next
-
-Initialization, full surface catalog, conflict/deletion detail, and automation detail are moved off the main path.
-
-### 2. Treat AGENTS as an index surface
-
-The bundled `AGENTS.relationship-map-snippet.template.md` is designed to stay short and durable.
-
-Use it to:
-
-- carry compact routing rules
-- point the agent to repo-local relationship-map docs
-- state what should not be read by default during ordinary changes
-
-Do not use it as a weak summary copy of the whole workflow. If a longer document is pointed to, the routing block should make the reading and non-reading cases clear.
-
-### 3. Separate reading protocol from update/maintenance protocol
-
-The skill now has two high-frequency support surfaces:
-
-- `10_relationship_map_runtime_protocol.md`
-- `11_relationship_map_execution_contract.md`
-
-This keeps route-first reading, read budgets, and curated-vs-generated expansion separate from update, audit, lifecycle, and structural-maintenance rules.
-
-### 4. Encode reading and non-reading cases explicitly
-
-This skill aims to save context, not just add more documentation.
-
-That means each longer document should answer:
-
-- when it should be read
-- when it should be skipped
-
-Without explicit `read when` / `skip when` logic, routing still wastes context.
-
-### 5. Preserve stable entrypoints and split below them
-
-The relationship-map layer should treat these as stable read-first entrypoints:
-
-- `00_index.md`
-- `10_relationship_map_runtime_protocol.md`
-- `11_relationship_map_execution_contract.md`
-
-If one becomes too large, keep the entrypoint name stable and split below it with second-level routing.
-
-## Default Operating Model
-
-The default path is:
-
-- `use`: route before a non-trivial change
-- `update`: refresh only the touched relationship entries after a meaningful change
-- `maintain`: run periodic upkeep only when needed
-
-The default read modes are:
-
-- `skip`: no relationship-map reads for clearly local, relationship-neutral changes
-- `light`: read `00_index.md` and the minimum relevant shard summary only
-- `full`: expand only when the change is high-risk, multi-surface, structurally important, or unresolved by `light`
 
 ## Repository Layout
 
 ```text
-relationship-map-maintenance/
+relationship-map-maintenance-skill/
+  README.md
+  README.zh-CN.md
+  LICENSE
   SKILL.md
   10_relationship_map_runtime_protocol.md
   11_relationship_map_execution_contract.md
   initialization-and-adoption.md
   relationship-map-surface-catalog.md
-  README.md
-  README.zh-CN.md
-  LICENSE
   agents/
     openai.yaml
   assets/
@@ -129,34 +51,112 @@ relationship-map-maintenance/
     conflict-lifecycle-and-deletion.md
 ```
 
+## What Ships In The Skill
+
+- `SKILL.md`: runtime router for trigger, mode, and depth decisions
+- `10_relationship_map_runtime_protocol.md`: route-first reading contract for `skip` / `light` / `full`
+- `11_relationship_map_execution_contract.md`: update, audit, lifecycle, and review-threshold contract
+- low-frequency sidecars:
+  - initialization and adoption
+  - relationship-map surface catalog
+- `references/`: conflict, audit, and automation detail kept off the hot path
+- `assets/`: AGENTS snippet, relationship-map templates, and maintenance-threshold trigger blocks
+
+## Core Design Ideas
+
+### 1. Keep the main skill focused on runtime routing
+
+The main `SKILL.md` is intentionally a hot-path router. Its job is to:
+
+- decide whether the skill should trigger
+- classify the round as `use`, `update`, or `maintain`
+- choose the lightest safe mode: `skip`, `light`, or `full`
+- route only into the next support file that is actually needed
+
+Initialization, structural lifecycle detail, and automation detail stay off the main path so ordinary use does not pay for cold material.
+
+### 2. Treat AGENTS as an index-bearing control surface
+
+The bundled `AGENTS.relationship-map-snippet.template.md` is meant to stay short and durable. Use it to:
+
+- carry compact routing rules
+- point to repo-local relationship-map docs
+- make the reading and non-reading cases explicit
+
+It should not become a weak summary copy of the full workflow. If `AGENTS.md` points to a longer document, it should also tell the next agent when that document should be read and when it should be skipped.
+
+### 3. Split reading protocol from execution and maintenance protocol
+
+The skill has two high-frequency support surfaces:
+
+- `10_relationship_map_runtime_protocol.md`
+- `11_relationship_map_execution_contract.md`
+
+This separates route-first reading, read-budget control, and curated-vs-generated expansion from update triggers, audit behavior, lifecycle rules, and review thresholds.
+
+### 4. Encode `read when` / `skip when` decisions directly
+
+The skill is built to reduce context spend, not merely add documentation. Each longer support surface answers both:
+
+- when it should be read
+- when it should be skipped
+
+Without explicit `read when` / `skip when` routing, agents still waste context even if the files are well written.
+
+### 5. Use thresholds and trigger-style reminders instead of silent drift
+
+The design uses explicit gates and maintenance triggers rather than letting relationship-map layers grow unchecked.
+
+- the main skill has hard `skip` and hard `full` gates so the skill does not over-trigger
+- the execution contract defines review thresholds for larger or cross-surface changes
+- the bundled templates start with `Maintenance Threshold` blocks so indexes, shards, manifests, and reports tell the user when second-level routing, archival, or cleanup is needed
+
+This keeps the layer maintainable without making the hot path verbose.
+
+### 6. Preserve stable entrypoints and reuse written results first
+
+The stable read-first entrypoints are:
+
+- `00_index.md`
+- `10_relationship_map_runtime_protocol.md`
+- `11_relationship_map_execution_contract.md`
+
+If one grows too large, split below it instead of renaming the entrypoint. During runtime, prefer index before tree scan, shard summary before shard body, curated shard before generated evidence, and generated manifest before scanning a whole generated folder.
+
+## Default Operating Model
+
+The default path is:
+
+- `use`: route before a non-trivial change
+- `update`: refresh only the touched relationship entries after a meaningful change
+- `maintain`: run periodic upkeep only when needed
+
+The default read modes are:
+
+- `skip`: no relationship-map reads for clearly local, relationship-neutral changes
+- `light`: read `00_index.md` and the minimum relevant shard summary only
+- `full`: expand only when the change is high-risk, multi-surface, structurally important, or unresolved by `light`
+
 ## Installation
 
-Copy the skill directory into your Codex skills location.
+### Install as a global Codex skill
 
-If the skill is used as a project-local skill, keep it under the repository's local skills directory.
-If it is used as a user-level skill, install it under the user's Codex skills directory.
+Copy the packaged files into:
 
-## Initialization
+```text
+<CODEX_HOME>/skills/relationship-map-maintenance/
+```
 
-Initialization has two parts:
+### Install as a project-local skill
 
-1. create the project-scoped relationship-map document layer under `docs/<project-scope>/relationship-map/`
-2. add the minimal relationship-map routing block to the project-local `AGENTS.md`
+Copy the same files into:
 
-The `AGENTS.md` integration is incremental:
+```text
+<repo>/.agents/skills/relationship-map-maintenance/
+```
 
-- if `AGENTS.md` already exists, append the relationship-map block
-- do not rewrite or reorganize unrelated `AGENTS.md` content
-- create `AGENTS.md` only if the project does not already have one
+## Notes
 
-Use `assets/AGENTS.relationship-map-snippet.template.md` for that block.
-
-## Maintenance And Automation
-
-The skill keeps maintenance conservative:
-
-- generated evidence may be refreshed
-- stale or conflicting shards may be flagged
-- reports may be written when there are material findings or when a scheduled run requires one
-- structural shard decisions should not be applied silently
-- physical deletion requires explicit user approval
+- Repo-local code, configs, scripts, tests, and governance docs remain the higher authority.
+- Relationship maps are a maintained routing and impact layer, not the source of implementation truth.
+- If code or governance conflicts with a relationship map, refresh the map in the same workstream rather than forcing reality to match stale documentation.
