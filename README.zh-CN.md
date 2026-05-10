@@ -27,7 +27,10 @@ flowchart TD
 relationship-map-maintenance-skill/
   README.md
   README.zh-CN.md
+  .gitignore
   LICENSE
+  docs/
+    USAGE.md
   SKILL.md
   10_relationship_map_runtime_protocol.md
   11_relationship_map_execution_contract.md
@@ -137,7 +140,23 @@ relationship-map-maintenance-skill/
 - `light`：只读 `00_index.md` 和最小相关 shard 的摘要
 - `full`：仅在高风险、多表面、结构性改动或 `light` 不足时展开
 
-## 安装
+## 适用场景
+
+适合在这些情况下使用：
+
+- 一个修复或功能很可能跨越多个文件、模块、配置、脚本、运行时链路或测试
+- 代码库经常出现跨关联表面的遗漏型问题
+- 用户希望在非平凡改动前先做影响面分析
+- 用户希望在改动后显式更新 relationship-map
+- 用户希望定期维护或审计 relationship-map artifacts
+
+不适合在这些情况下使用：
+
+- 改动明显是机械式、局部且关系中立
+- 单文件改动没有有意义的上下游影响
+- 不会产生可复用的关系图产物
+
+## 安装说明
 
 ### 作为全局 Codex skill 安装
 
@@ -155,8 +174,29 @@ relationship-map-maintenance-skill/
 <repo>/.agents/skills/relationship-map-maintenance/
 ```
 
+### 初始化行为
+
+初始化分两部分：
+
+1. 在 `docs/<project-scope>/relationship-map/` 下创建项目级 relationship-map 层
+2. 把最小路由块追加到项目本地 `AGENTS.md`
+
+`AGENTS.md` 集成必须是增量式：
+
+- 如果 `AGENTS.md` 已存在，只追加 relationship-map 片段
+- 不改写、不重组无关的 `AGENTS.md` 内容
+- 只有项目没有 `AGENTS.md` 时才创建
+
+对应模板在 `assets/AGENTS.relationship-map-snippet.template.md`。
+
+## 使用
+
+运行时顺序、模式选择、AGENTS-as-index 指南和示例提示词见 [docs/USAGE.md](./docs/USAGE.md)。
+
 ## 说明
 
 - 对具体仓库而言，repo-local 的代码、配置、脚本、测试和治理文档仍然是更高 authority。
 - Relationship map 是维护型的路由与影响层，不是实现真相源。
 - 如果代码或治理文档与 relationship map 冲突，应在同一工作流里刷新 map，而不是让真实实现去迁就过期文档。
+- 默认使用 `docs/<project-scope>/relationship-map/`。
+- 只有用户明确希望多个项目或实验共享同一层 relationship-map 时，才使用 `docs/relationship-map/`。

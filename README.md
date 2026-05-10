@@ -27,7 +27,10 @@ flowchart TD
 relationship-map-maintenance-skill/
   README.md
   README.zh-CN.md
+  .gitignore
   LICENSE
+  docs/
+    USAGE.md
   SKILL.md
   10_relationship_map_runtime_protocol.md
   11_relationship_map_execution_contract.md
@@ -137,7 +140,23 @@ The default read modes are:
 - `light`: read `00_index.md` and the minimum relevant shard summary only
 - `full`: expand only when the change is high-risk, multi-surface, structurally important, or unresolved by `light`
 
-## Installation
+## When To Use This Skill
+
+Use it when:
+
+- a bug fix or feature likely crosses multiple files, modules, configs, scripts, runtime links, or tests
+- the codebase has repeated omission-style failures across related surfaces
+- the user wants pre-change impact analysis before a non-trivial edit
+- the user wants explicit post-change relationship-map updates
+- the user wants periodic maintenance or audit of relationship-map artifacts
+
+Do not use it when:
+
+- the change is clearly mechanical, local, and relationship-neutral
+- a single-file edit has no meaningful upstream or downstream impact
+- no reusable relationship artifact would result
+
+## Installation Notes
 
 ### Install as a global Codex skill
 
@@ -155,8 +174,29 @@ Copy the same files into:
 <repo>/.agents/skills/relationship-map-maintenance/
 ```
 
+### Initialization behavior
+
+Initialization has two parts:
+
+1. create the project-scoped relationship-map layer under `docs/<project-scope>/relationship-map/`
+2. append the minimal routing block to the project-local `AGENTS.md`
+
+The `AGENTS.md` integration is incremental:
+
+- if `AGENTS.md` already exists, append the relationship-map block
+- do not rewrite or reorganize unrelated `AGENTS.md` content
+- create `AGENTS.md` only if the project does not already have one
+
+Use `assets/AGENTS.relationship-map-snippet.template.md` for that block.
+
+## Usage
+
+See [docs/USAGE.md](./docs/USAGE.md) for runtime order, mode selection, AGENTS-as-index guidance, and example prompts.
+
 ## Notes
 
 - Repo-local code, configs, scripts, tests, and governance docs remain the higher authority.
 - Relationship maps are a maintained routing and impact layer, not the source of implementation truth.
 - If code or governance conflicts with a relationship map, refresh the map in the same workstream rather than forcing reality to match stale documentation.
+- Default to `docs/<project-scope>/relationship-map/`.
+- Use `docs/relationship-map/` only when the user explicitly wants one repository-wide relationship-map layer shared across multiple projects or experiments.
